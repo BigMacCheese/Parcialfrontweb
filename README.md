@@ -1,70 +1,22 @@
-# Getting Started with Create React App
+Juan David Martínez Moreno 201923416
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Instrucciones de ejecución:
 
-## Available Scripts
+1. Ejecutar el back en el puerto 3000.
+2. Ejecutar el front como viene y aceptar la opción que se da de que se ejecute en el puerto 3001.
 
-In the project directory, you can run:
+# Decisiones de diseño
 
-### `npm start`
+Primero que todo, ocurrió un problema con el back proporcionado para el parcial y es que este no dejaba hacer ninguna request de HTTP por cuestiones de seguridad (en específico por una política llamada CORS). Por esto mismo, fue necesario deshabilitar esta política desde el back y se modificó el main.ts de la siguiente manera:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+    const app = await NestFactory.create(AppModule); => const app = await NestFactory.create(AppModule, {cors: true});
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+De esta manera ya se podían hacer las peticiones.
 
-### `npm test`
+Ahora, el desarrollo del login se hizo con una librería llamada axios, la cual permitía hacer las peticiones HTTP de una manera más simple, y para el login era necesario hacer un POST de la información recibida del formulario para validar el username y la contraseña. Por consiguiente, se recibía el rol y de esta manera se le daba acceso a una nueva vista haciendo uso de useNavigate.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+En la nueva vista se puede ver dos partes, la lista de los libros en la izquierda y en la derecha la vista del detalle del libro. Esta parte fue la más desafiante ya que al dar click a un libro no se debía ir a otra vista a mostar el detalle sino permanecer en la misma vista. Para lograr esto simplemente se pasó por parametro el hook de estado del id del libro el cual fuera seleccionado a los demás componentes para que estos fueran capaces de modificar el valor de este. En otras palabras, libroslista.js tiene un hook de estado que guarda el valor del id del libro que se haya seleccionado, la función del hook de estado que modifica el id fue pasado a libro.js el cual modifica el id dependiendo del libro que haya seleccionado y, por último, el id del libro seleccionado es pasado como parametro a librodetalle.js, el cual recibe este id para hacer un get del libro seleccionado (/books/:id) y así poder renderizarlo en la parte derecha de esta vista.
 
-### `npm run build`
+Para la internacionalización, simplemente se creó una carpeta con los dos idiomas: español e inglés, los cuales contienen las traducciones de los dos idiomas para las labels fijas de la aplicación, es decir, de los textos fijos de todas las listas (login, catálogo de libro y detalle de libro).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

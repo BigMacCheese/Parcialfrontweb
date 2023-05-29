@@ -1,0 +1,17 @@
+{
+    "Username or email": "Nombre de usuario o correo electrónico",
+    "Password": "Contraseña",
+    "Author": "Autor",
+    "Publisher": "Editorial",
+    "Genre": "Género",
+    "Year": "Año",
+    "Available online": "Disponible en línea",
+    "Price": "Precio",
+    "Summary": "Resumen",
+    "Your allied bookstore": "Tu librería aliada",
+    "Find even the book you weren't looking for": "Encuentra hasta el libro que no estabas buscando",
+    "Sign in": "Ingresa",    
+    "Succesfull login!": "¡Inicio de sesión exitoso!",
+    "Error: check your email and password":"Error: verifica el correo y la contraseña",
+    "No book selected":"No se ha seleccionado ningun libro"
+}

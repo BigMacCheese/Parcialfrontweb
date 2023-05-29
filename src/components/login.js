@@ -1,21 +1,63 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { FormattedMessage } from "react-intl";
 
 function Login(){
 
+    //const [error, setError] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-    e.preventDefault();
+    const handleEmailChange = (e) => {
+      setEmail(e.target.value);
+    };
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return;
+    const handlePasswordChange = (e) => {
+      setPassword(e.target.value);
+    };
+
+    const validateEmail = (email) => {
+      return email.includes('@');
     }
 
-    if (password.length < 6) {
-      return;
-    }
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      if(validateEmail(email) && password.length >= 6){
+        
+        const data = {
+          email: email,
+          password: password
+        };
+
+        try{
+          const response = await axios.post("http://localhost:3000/login", data);
+          const {rol} = response.data;
+
+          if(rol === 'Administrador'){
+            navigate('/books');
+          }
+          else{
+            navigate('/books');
+          }
+
+        } catch(error){
+          console.error(error);
+        }
+
+        setEmail('');
+        setPassword('');
+
+      }
+      else{
+        setShowSuccess(false);
+        setShowError(true);
+      }
+    };
 
     return(
         <div class="container py-5 h-100">
@@ -27,40 +69,54 @@ function Login(){
                   <div class="card-body p-md-5 mx-md-4">
     
                     <div class="text-center">
-                      <h1 class="mt-1 mb-5 pb-1">Tu librería aliada</h1>
+                      <h1 class="mt-1 mb-5 pb-1"> <FormattedMessage id="Your allied bookstore"/></h1>
                     </div>
     
                     <form onSubmit={handleSubmit}>  
                       <div class="form-outline mb-4">
-                        <label class="mt-3 form-label" for="form2Example11">Username or email</label>
-                        <input type="email" id="form2Example11" class="form-control" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                        <label class="mt-3 form-label" for="form2Example11"> <FormattedMessage id="Username or email"/> </label>
+                        <input type="email" id="form2Example11" class="form-control" value={email} onChange={handleEmailChange}/>
                       </div>
     
                       <div class="form-outline mb-4">
-                        <label class="form-label" for="form2Example22">Password</label>
-                        <input type="password" id="form2Example22" class="form-control" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        <label class="form-label" for="form2Example22"> <FormattedMessage id="Password"/> </label>
+                        <input type="password" id="form2Example22" class="form-control" value={password} onChange={handlePasswordChange}/>
                       </div>
     
                       <div class="text-center pt-1 mb-5 pb-1">
-                        <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="button">Sign in</button>
+                        <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Sign in</button>
                       </div>
                     </form>
     
                   </div>
                 </div>
                 
-                <div class="bg-primrary col-lg-6 d-flex align-items-center gradient-custom-2">
-                  <div class="text-black px-3 py-4 p-md-5 mx-md-4">
-                     <img src="../Libros-codificados-300x262.jpg" style={{width:"100em"}} alt="logo"/>
-                     <h4 class="mb-4">Encuentra hasta el libro que no estabas buscando</h4>
+                <div class="col-lg-6 d-flex align-items-center gradient-custom-2 section-container" style = {{ backgroundColor: "#72A0B4"}}>
+                  <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                    <div class="image-container">
+                     <img src="../assets/iconolibros.jpg" alt="logo"/>
+                    </div>
+                     <h4 class="mb-4"> <FormattedMessage id="Find even the book you weren't looking for"/></h4>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {showSuccess && (
+        <div className="success-popup">
+          <p> <FormattedMessage id="Succesful login!"/></p>
+        </div>
+        )}
+
+        {showError && (
+        <div className="error-popup">
+          <p> <FormattedMessage id="Error: check your email and password"/> </p>
+        </div>
+        )}
       </div>
     );
 }
-}
+
 export default Login;
